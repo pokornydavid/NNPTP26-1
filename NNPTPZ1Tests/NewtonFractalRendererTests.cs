@@ -1,5 +1,4 @@
-﻿
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NNPTPZ1;
 using NNPTPZ1.Mathematics;
 using System.Drawing;
@@ -10,14 +9,14 @@ namespace NNPTPZ1Tests
     public class NewtonFractalRendererTests
     {
         // Vytvori polynom 1 + x^3 pro testovani.
-        private Poly CreatePolynomial()
+        private Polynomial CreatePolynomial()
         {
-            Poly polynomial = new Poly();
+            Polynomial polynomial = new Polynomial();
 
-            polynomial.Add(new Cplx { Re = 1 });
-            polynomial.Add(new Cplx { Re = 0 });
-            polynomial.Add(new Cplx { Re = 0 });
-            polynomial.Add(new Cplx { Re = 1 });
+            polynomial.Add(new ComplexNumber { Real = 1 });
+            polynomial.Add(new ComplexNumber { Real = 0 });
+            polynomial.Add(new ComplexNumber { Real = 0 });
+            polynomial.Add(new ComplexNumber { Real = 1 });
 
             return polynomial;
         }
@@ -71,8 +70,8 @@ namespace NNPTPZ1Tests
         [TestMethod]
         public void RenderConstantPolynomialTest()
         {
-            Poly polynomial = new Poly();
-            polynomial.Add(new Cplx { Re = 1 });
+            Polynomial polynomial = new Polynomial();
+            polynomial.Add(new ComplexNumber { Real = 1 });
 
             using (Bitmap bitmap = new Bitmap(10, 10))
             {

@@ -6,35 +6,35 @@ namespace NNPTPZ1
 
     namespace Mathematics
     {
-        public class Poly
+        public class Polynomial
         {
             /// <summary>
-            /// Coe
+            /// Koeficienty polynomu.
             /// </summary>
-            public List<Cplx> Coe { get; set; }
+            public List<ComplexNumber> Coefficients { get; set; }
 
             /// <summary>
             /// Constructor
             /// </summary>
-            public Poly() => Coe = new List<Cplx>();
+            public Polynomial() => Coefficients = new List<ComplexNumber>();
 
-            public void Add(Cplx coe) =>
-                Coe.Add(coe);
+            public void Add(ComplexNumber coefficient) =>
+                Coefficients.Add(coefficient);
 
             /// <summary>
             /// Vypocita derivaci aktualniho polynomu.
             /// Vysledkem je novy polynom.
             /// </summary>
-            public Poly Derive()
+            public Polynomial Derive()
             {
-                Poly derivative = new Poly();
+                Polynomial derivative = new Polynomial();
 
-                for (int exponent = 1; exponent < Coe.Count; exponent++)
+                for (int exponent = 1; exponent < Coefficients.Count; exponent++)
                 {
-                    Cplx coefficient = Coe[exponent];
+                    ComplexNumber coefficient = Coefficients[exponent];
 
-                    Cplx derivedCoefficient = coefficient.Multiply(
-                        new Cplx { Re = exponent });
+                    ComplexNumber derivedCoefficient = coefficient.Multiply(
+                        new ComplexNumber { Real = exponent });
 
                     derivative.Add(derivedCoefficient);
                 }
@@ -47,23 +47,24 @@ namespace NNPTPZ1
             /// </summary>
             /// <param name="x">point of evaluation</param>
             /// <returns>y</returns>
-            public Cplx Eval(double x)
+            public ComplexNumber Eval(double x)
             {
-                var y = Eval(new Cplx() { Re = x, Imaginari = 0 });
-                return y;
+                ComplexNumber result = Eval(new ComplexNumber() { Real = x, Imaginary = 0 });
+                return result;
             }
 
             /// <summary>
             /// Vypocita hodnotu polynomu pro zadane komplexni cislo.
             /// Pouziva Hornerovo schema pro jednodussi vypocet.
             /// </summary>
-            public Cplx Eval(Cplx x)
+            public ComplexNumber Eval(ComplexNumber x)
             {
-                Cplx result = Cplx.Zero;
+                ComplexNumber result = ComplexNumber.Zero;
 
-                for (int i = Coe.Count - 1; i >= 0; i--)
+                for (int coefficientIndex = Coefficients.Count - 1;
+                    coefficientIndex >= 0; coefficientIndex--)
                 {
-                    result = result.Multiply(x).Add(Coe[i]);
+                    result = result.Multiply(x).Add(Coefficients[coefficientIndex]);
                 }
 
                 return result;
@@ -78,14 +79,14 @@ namespace NNPTPZ1
             {
                 StringBuilder result = new StringBuilder();
 
-                for (int exponent = 0; exponent < Coe.Count; exponent++)
+                for (int exponent = 0; exponent < Coefficients.Count; exponent++)
                 {
                     if (exponent > 0)
                     {
                         result.Append(" + ");
                     }
 
-                    result.Append(Coe[exponent]);
+                    result.Append(Coefficients[exponent]);
                     result.Append('x', exponent);
                 }
 

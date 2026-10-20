@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Drawing;
 using NNPTPZ1.Mathematics;
 
@@ -18,12 +17,12 @@ namespace NNPTPZ1
             }
 
             // Vytvoreni polynomu
-            Poly polynomial = new Poly();
+            Polynomial polynomial = new Polynomial();
 
-            polynomial.Add(new Cplx { Re = 1 });
-            polynomial.Add(Cplx.Zero);
-            polynomial.Add(Cplx.Zero);
-            polynomial.Add(new Cplx { Re = 1 });
+            polynomial.Add(new ComplexNumber { Real = 1 });
+            polynomial.Add(ComplexNumber.Zero);
+            polynomial.Add(ComplexNumber.Zero);
+            polynomial.Add(new ComplexNumber { Real = 1 });
 
             Console.WriteLine(polynomial);
             Console.WriteLine(polynomial.Derive());

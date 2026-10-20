@@ -57,7 +57,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="CplxTests.cs" />
+    <Compile Include="ComplexNumberTests.cs" />
     <Compile Include="FractalSettingsTests.cs" />
     <Compile Include="MathRefactoringTests.cs" />
     <Compile Include="NewtonFractalRendererTests.cs" />

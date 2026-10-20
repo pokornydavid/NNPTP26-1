@@ -13,30 +13,30 @@ namespace NNPTPZ1
         private const double RootTolerance = 0.01;
         private const double DerivativeThreshold = 0.000000000001;
 
-        private readonly Color[] colors =
+        private readonly Color[] _colors =
         {
             Color.Red, Color.Blue, Color.Green,
             Color.Yellow, Color.Orange, Color.Fuchsia,
             Color.Gold, Color.Cyan, Color.Magenta
         };
 
-        public void Render(Bitmap bitmap, Poly polynomial,
+        public void Render(Bitmap bitmap, Polynomial polynomial,
             double xMin, double xMax, double yMin, double yMax)
         {
             double xStep = (xMax - xMin) / bitmap.Width;
             double yStep = (yMax - yMin) / bitmap.Height;
 
-            Poly derivative = polynomial.Derive();
-            List<Cplx> roots = new List<Cplx>();
+            Polynomial derivative = polynomial.Derive();
+            List<ComplexNumber> roots = new List<ComplexNumber>();
 
             for (int y = 0; y < bitmap.Height; y++)
             {
                 for (int x = 0; x < bitmap.Width; x++)
                 {
-                    Cplx point = CreatePoint(x, y, xMin, yMin, xStep, yStep);
+                    ComplexNumber point = CreatePoint(x, y, xMin, yMin, xStep, yStep);
 
                     int iterations;
-                    Cplx root = FindRoot(polynomial, derivative, point, out iterations);
+                    ComplexNumber root = FindRoot(polynomial, derivative, point, out iterations);
 
                     // Pokud se koren nepodarilo najit, pixel bude cerny
                     if (root == null)
@@ -56,44 +56,41 @@ namespace NNPTPZ1
         /// <summary>
         /// Vytvori komplexni cislo podle souradnic pixelu.
         /// </summary>
-        private Cplx CreatePoint(int x, int y, double xMin, double yMin,
+        private ComplexNumber CreatePoint(int x, int y, double xMin, double yMin,
             double xStep, double yStep)
         {
-            Cplx point = new Cplx
+            ComplexNumber point = new ComplexNumber
             {
-                Re = xMin + x * xStep,
-                Imaginari = (float)(yMin + y * yStep)
+                Real = xMin + x * xStep,
+                Imaginary = yMin + y * yStep
             };
 
-            if (point.Re == 0)
+            if (point.Real == 0)
             {
-                point.Re = ZeroReplacement;
+                point.Real = ZeroReplacement;
             }
 
-            if (point.Imaginari == 0)
+            if (point.Imaginary == 0)
             {
-                point.Imaginari = (float)ZeroReplacement;
+                point.Imaginary = ZeroReplacement;
             }
 
             return point;
         }
 
         /// <summary>
-        /// Pomoci Newtonovy metody najde priblizny koren.
+        /// Pomoci Newtonovy metody hleda priblizny koren polynomu.
         /// Zaroven vraci pocet iteraci.
-        /// </summary>
-        /// <summary>
-        /// Pomoci Newtonovy metody hleda koren polynomu.
         /// Pokud vypocet selze, vrati null.
         /// </summary>
-        private Cplx FindRoot(Poly polynomial, Poly derivative,
-            Cplx point, out int iterations)
+        private ComplexNumber FindRoot(Polynomial polynomial, Polynomial derivative,
+            ComplexNumber point, out int iterations)
         {
             iterations = 0;
 
             for (int i = 0; i < MaxIterations; i++)
             {
-                Cplx derivativeValue = derivative.Eval(point);
+                ComplexNumber derivativeValue = derivative.Eval(point);
 
                 // Kontrola derivace pred delenim
                 if (!IsFinite(derivativeValue) ||
@@ -102,7 +99,7 @@ namespace NNPTPZ1
                     return null;
                 }
 
-                Cplx difference = polynomial.Eval(point)
+                ComplexNumber difference = polynomial.Eval(point)
                     .Divide(derivativeValue);
 
                 if (!IsFinite(difference))
@@ -119,8 +116,8 @@ namespace NNPTPZ1
                 }
 
                 double differenceSize =
-                    difference.Re * difference.Re +
-                    difference.Imaginari * difference.Imaginari;
+                    difference.Real * difference.Real +
+                    difference.Imaginary * difference.Imaginary;
 
                 if (differenceSize < ConvergenceThreshold)
                 {
@@ -135,25 +132,25 @@ namespace NNPTPZ1
         /// <summary>
         /// Overi, ze komplexni cislo obsahuje platne hodnoty.
         /// </summary>
-        private bool IsFinite(Cplx number)
+        private bool IsFinite(ComplexNumber number)
         {
-            return !double.IsNaN(number.Re) &&
-                   !double.IsInfinity(number.Re) &&
-                   !float.IsNaN(number.Imaginari) &&
-                   !float.IsInfinity(number.Imaginari);
+            return !double.IsNaN(number.Real) &&
+                   !double.IsInfinity(number.Real) &&
+                   !double.IsNaN(number.Imaginary) &&
+                   !double.IsInfinity(number.Imaginary);
         }
 
         /// <summary>
         /// Zjisti, jestli uz je koren znamy.
         /// Kdyz neni, prida ho do seznamu.
         /// </summary>
-        private int GetRootIndex(List<Cplx> roots, Cplx root)
+        private int GetRootIndex(List<ComplexNumber> roots, ComplexNumber root)
         {
             for (int i = 0; i < roots.Count; i++)
             {
                 double distance =
-                    Math.Pow(root.Re - roots[i].Re, 2) +
-                    Math.Pow(root.Imaginari - roots[i].Imaginari, 2);
+                    Math.Pow(root.Real - roots[i].Real, 2) +
+                    Math.Pow(root.Imaginary - roots[i].Imaginary, 2);
 
                 if (distance <= RootTolerance)
                 {
@@ -170,7 +167,7 @@ namespace NNPTPZ1
         /// </summary>
         private Color GetPixelColor(int rootIndex, int iterations)
         {
-            Color baseColor = colors[rootIndex % colors.Length];
+            Color baseColor = _colors[rootIndex % _colors.Length];
 
             int red = Math.Max(0, baseColor.R - iterations * 2);
             int green = Math.Max(0, baseColor.G - iterations * 2);
